@@ -1,0 +1,26 @@
+﻿<h1>Contact List</h1>
+<p *ngIf="!contactList"><em>Loading...</em></p>
+<p>
+    <a [routerLink]="['/register-contact']">Create New</a>
+</p>
+<table class='table' *ngIf="contactList">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let contact of contactList">
+            <td>{{ contact.id }}</td>
+            <td>{{ contact.name }}</td>
+            <td>{{ contact.number }}</td>           
+            <td>
+            <td>
+                <a [routerLink]="['/contact/edit/', contact.id]">Edit</a> |
+                <a [routerLink]="" (click)="delete(contact.id)">Delete</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
