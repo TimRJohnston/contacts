@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AngularPhonebookApp.Interfaces;
+using AngularPhonebookApp.Models.Entity;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -7,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace AngularPhonebookApp.Models
 {
-    public class ContactDataAccessLayer
+    public class ContactDataAccessLayer: IContactDataAccessLayer
     {
-        string connectionString = @"Server=localhost\SQLEXPRESS01;Database=TestDB;Trusted_Connection=True;";
+        string connectionString = @"Server=localhost;Database=TestDB;Trusted_Connection=True;";
         //View all contacts
         public IEnumerable<Contact> GetAllContacts()
         {
@@ -26,7 +28,7 @@ namespace AngularPhonebookApp.Models
                     {
                         Contact contact = new Contact();
                         contact.ID = Convert.ToInt32(rdr["Id"]);
-                        contact.Name = rdr["Name"].ToString();
+                        contact.ContactName = rdr["ContactName"].ToString();
                         contact.Number = rdr["Number"].ToString();                        
                         lstcontact.Add(contact);
                     }
@@ -36,10 +38,12 @@ namespace AngularPhonebookApp.Models
             }
             catch
             {
+                //TODO: Add proper exceptions
                 throw;
             }
         }
         //Add contact
+  
         public int AddContact(Contact contact)
         {
             try
@@ -48,8 +52,9 @@ namespace AngularPhonebookApp.Models
                 {
                     SqlCommand cmd = new SqlCommand("spAddContact", con);
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Name", contact.Name);
-                    cmd.Parameters.AddWithValue("@Number", contact.Number);                   
+                    cmd.Parameters.AddWithValue("@ContactName", contact.ContactName);
+                    cmd.Parameters.AddWithValue("@Number", contact.Number);
+                    cmd.Parameters.AddWithValue("@SessionID", contact.SessionID);
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
@@ -71,8 +76,9 @@ namespace AngularPhonebookApp.Models
                     SqlCommand cmd = new SqlCommand("spUpdateContact", con);
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Id", contact.ID);
-                    cmd.Parameters.AddWithValue("@Name", contact.Name);
+                    cmd.Parameters.AddWithValue("@ContactName", contact.ContactName);
                     cmd.Parameters.AddWithValue("@Number", contact.Number);
+                    cmd.Parameters.AddWithValue("@SessionID", contact.SessionID);
                     con.Open();
                     cmd.ExecuteNonQuery();
                     con.Close();
@@ -99,7 +105,7 @@ namespace AngularPhonebookApp.Models
                     while (rdr.Read())
                     {
                         contact.ID = Convert.ToInt32(rdr["Id"]);
-                        contact.Name = rdr["Name"].ToString();
+                        contact.ContactName = rdr["ContactName"].ToString();
                         contact.Number = rdr["Number"].ToString();                        
                     }
                 }

@@ -7,34 +7,40 @@ using System.Data.SqlClient;
 using System.Data;
 using AngularPhonebookApp.Models;
 using AngularPhonebookApp.Services;
+using AngularPhonebookApp.Interfaces;
+
+
 
 namespace AngularPhonebookApp.Controllers
 {
     
     public class ContactController : Controller
-    {
-        ContactService contactService = new ContactService();
+    {   
+        
+        ContactService contactService = new ContactService(new ContactDataAccessLayer());
+        
         [HttpGet]
         [Route("api/Contact/Index")]
-        public IEnumerable<Contact> Index()
+        public IEnumerable<ContactDTO> Index()
         {
+            //TODO Add logging
             return contactService.GetAllContacts();
         }
         [HttpPost]
         [Route("api/Contact/Create")]
-        public int Create([FromBody] Contact contact)
+        public int Create([FromBody] ContactDTO contact)
         {
             return contactService.AddContact(contact);
         }
         [HttpGet]
         [Route("api/Contact/Details/{id}")]
-        public Contact Details(int id)
+        public ContactDTO Details(int id)
         {
             return contactService.GetContactData(id);
         }
         [HttpPut]
         [Route("api/Contact/Edit")]
-        public int Edit([FromBody]Contact contact)
+        public int Edit([FromBody]ContactDTO contact)
         {
             return contactService.UpdateContact(contact);
         }

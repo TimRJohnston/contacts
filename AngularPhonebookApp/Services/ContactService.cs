@@ -6,43 +6,57 @@ using Microsoft.AspNetCore.Mvc;
 using System.Data.SqlClient;
 using System.Data;
 using AngularPhonebookApp.Models;
+using AngularPhonebookApp.Interfaces;
+using AngularPhonebookApp.Models.Entity;
+using AngularPhonebookApp.Models.Mappers;
 
 namespace AngularPhonebookApp.Services
 {
-    public class ContactService
+    public class ContactService : IContactService
     {
 
-        ContactDataAccessLayer ContactDAL = new ContactDataAccessLayer();
+        private IContactDataAccessLayer _contactDAL;
+        ContactMapper mapper = new ContactMapper();
 
-        public IEnumerable<Contact> GetAllContacts()
+        public ContactService(IContactDataAccessLayer contactDAL)
         {
-            return ContactDAL.GetAllContacts();
+            this._contactDAL = contactDAL;
+        }
+        
+        public IEnumerable<ContactDTO> GetAllContacts()
+        {
+            IEnumerable<Contact> contacts = _contactDAL.GetAllContacts();
+            List<ContactDTO> contactDTOs = new List<ContactDTO>();
+            foreach (var contact in contacts)
+            {
+                contactDTOs.Add(mapper.ToDTO(contact));
+            }
+            return contactDTOs;
         }
 
-
-        public int AddContact(Contact contact)
+        public int AddContact(ContactDTO contactDto)
         {
-            return ContactDAL.AddContact(contact);
+            Contact contact = mapper.ToEntity(contactDto);
+            contact.SessionID = Guid.NewGuid().ToString();
+            return _contactDAL.AddContact(contact);
         }
 
-
-        public Contact GetContactData(int id)
+        public ContactDTO GetContactData(int id)
         {
-            return ContactDAL.GetContactData(id);
+            ContactDTO contactDTO = mapper.ToDTO(_contactDAL.GetContactData(id));
+            return contactDTO;
         }
 
-
-        public int UpdateContact(Contact contact)
+        public int UpdateContact(ContactDTO contactDto)
         {
-            return ContactDAL.UpdateContact(contact);
+            Contact contact = mapper.ToEntity(contactDto);
+            contact.SessionID = Guid.NewGuid().ToString();
+            return _contactDAL.UpdateContact(contact);
         }
-
 
         public int DeleteContact(int id)
         {
-            return ContactDAL.DeleteContact(id);
+            return _contactDAL.DeleteContact(id);
         }
-
-
     }
 }
