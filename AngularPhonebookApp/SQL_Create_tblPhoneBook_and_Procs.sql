@@ -28,7 +28,7 @@ Create procedure spAddContact
 as         
 Begin         
     Insert into tblPhoneBook (ContactName,Number,SessionID)         
-    Values (@@ContactName,@Number,@SessionID)         
+    Values (@ContactName,@Number,@SessionID)         
 End
 go
 

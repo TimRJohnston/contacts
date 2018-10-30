@@ -17,7 +17,7 @@ namespace Tests.Integration
     public class ContactControllerTest
     {
 
-        private static DBSetupTestUtil dbUtil = new DBSetupTestUtil(@"Server=localhost;Database=TestDB;Trusted_Connection=True;");
+        private static DBSetupTestUtil dbUtil = new DBSetupTestUtil(@"Server=localhost\SQLEXPRESS01;Database=TestDB;Trusted_Connection=True;");
         private static ContactController contactController = new ContactController();
 
         [TestInitialize]

@@ -11,7 +11,7 @@ namespace AngularPhonebookApp.Models
 {
     public class ContactDataAccessLayer: IContactDataAccessLayer
     {
-        string connectionString = @"Server=localhost;Database=TestDB;Trusted_Connection=True;";
+        string connectionString = @"Server=localhost\SQLEXPRESS01;Database=TestDB;Trusted_Connection=True;";
         //View all contacts
         public IEnumerable<Contact> GetAllContacts()
         {
